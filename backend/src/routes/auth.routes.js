@@ -8,18 +8,25 @@ router.post("/login", async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM usuarios WHERE email = ? AND password = ?",
+      "SELECT id, nombre, email, admin FROM usuarios WHERE email = ? AND password = ?",
       [email, password]
     );
 
     if (rows.length === 0) {
-      return res.status(401).json({ message: "Usuario o contraseña incorrecta" });
+      return res.status(401).json({
+        message: "Correo o contraseña incorrectos",
+      });
     }
 
-    res.json({ message: "Login exitoso", user: rows[0] });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.json({
+      message: "Login correcto",
+      user: rows[0], // incluye admin
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error del servidor",
+    });
   }
 });
 
