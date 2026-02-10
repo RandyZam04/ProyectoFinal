@@ -27,19 +27,46 @@ const ProgressCircle = ({ porcentaje, size = 50, strokeWidth = 5, colorClass = "
 
 export default function SeccionPresupuesto({ idProyecto }) {
   const [montoMaximo, setMontoMaximo] = useState(0); 
-  const [rubros, setRubros] = useState([{ nombre: "", descripcion: "", monto: 0 }]);
+  const [rubros, setRubros] = useState([]);
   const [rubroSeleccionado, setRubroSeleccionado] = useState(null);
   const [gastosRealizados, setGastosRealizados] = useState([]); 
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/presupuestos/proyecto/${idProyecto}`)
-      .then(res => res.ok ? res.json() : Promise.reject())
-      .then(data => {
-        setMontoMaximo(data.total);
-        setRubros(data.rubros);
-      }).catch(() => console.log("Iniciando presupuesto"));
-
+    const cargarDatos = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/presupuestos/proyecto/${idProyecto}`);
+        if (res.ok) {
+          const data = await res.json();
+          setMontoMaximo(data.total || 0);
+          setRubros(data.rubros || []);
+        }
+      } catch (error) {
+        console.error("Error al obtener presupuesto:", error);
+      }
+    };
+    cargarDatos();
   }, [idProyecto]);
+
+  // 2. FUNCIÓN PARA VER DETALLE
+  const abrirDetalleRubro = async (rubro) => {
+    try {
+      if (!rubro.idrubros) {
+        setGastosRealizados([]);
+        setRubroSeleccionado(rubro);
+        return;
+      }
+
+      const res = await fetch(`http://localhost:3000/api/gastos/rubro/${rubro.idrubros}`);
+      const data = await res.json();
+      
+      setGastosRealizados(data);
+      setRubroSeleccionado(rubro);
+    } catch (error) {
+      console.error("Error al cargar historial de gastos:", error);
+      setGastosRealizados([]);
+      setRubroSeleccionado(rubro);
+    }
+  };
 
   const totalAsignado = rubros.reduce((acc, r) => acc + Number(r.monto), 0);
   const porcentajeTotal = montoMaximo > 0 ? Math.min((totalAsignado / montoMaximo) * 100, 100) : 0;
@@ -64,9 +91,9 @@ export default function SeccionPresupuesto({ idProyecto }) {
             rubros 
         })
       });
-      if (res.ok) alert("✅ Cambios guardados en la nube");
+      if (res.ok) alert("✅ Presupuesto actualizado correctamente");
     } catch {
-      alert("Error al guardar");
+      alert("Error al guardar en el servidor");
     }
   };
 
@@ -74,7 +101,7 @@ export default function SeccionPresupuesto({ idProyecto }) {
     return (
       <DetalleRubro 
         rubro={rubroSeleccionado} 
-        avances={gastosRealizados} 
+        avances={gastosRealizados}
         alCerrar={() => setRubroSeleccionado(null)} 
       />
     );
@@ -83,6 +110,7 @@ export default function SeccionPresupuesto({ idProyecto }) {
   return (
     <div className="max-w-5xl mx-auto pb-24 animate-fadeIn px-4">
       
+      {/* HEADER DE PRESUPUESTO */}
       <div className="bg-white rounded-[2rem] p-10 mb-12 shadow-xl shadow-blue-900/5 border border-gray-100 flex flex-col md:flex-row items-center gap-12">
         <div className="flex items-center gap-8">
           <ProgressCircle 
@@ -119,19 +147,19 @@ export default function SeccionPresupuesto({ idProyecto }) {
         </div>
       </div>
 
+      {/* LISTADO DE RUBROS */}
       <div className="space-y-6">
         <div className="flex justify-between items-center px-6">
             <h3 className="text-xs font-black text-gray-900 uppercase tracking-[0.3em]">Desglose de Obra</h3>
-            <span className="text-[10px] font-bold text-gray-400 uppercase italic">Costo por categoría</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase italic">Haz clic para ver detalles del rubro</span>
         </div>
 
         {rubros.map((rubro, index) => {
           const porcIndividual = montoMaximo > 0 ? ((Number(rubro.monto) / montoMaximo) * 100).toFixed(1) : 0;
           return (
             <div 
-              key={index} 
-              // --- SE AÑADE EL CLICK PARA IR AL DETALLE ---
-              onClick={() => setRubroSeleccionado(rubro)}
+              key={rubro.idrubros || index} 
+              onClick={() => abrirDetalleRubro(rubro)}
               className="bg-white hover:shadow-md p-6 rounded-[1.5rem] border border-gray-100 flex items-center gap-8 transition-all group cursor-pointer"
             >
               
@@ -144,7 +172,7 @@ export default function SeccionPresupuesto({ idProyecto }) {
                   className="font-black text-gray-800 outline-none w-full bg-transparent text-xl placeholder:text-gray-200" 
                   value={rubro.nombre} 
                   onChange={(e) => manejarCambioRubro(index, e)} 
-                  onClick={(e) => e.stopPropagation()} 
+                  onClick={(e) => e.stopPropagation()}
                 />
                 <input 
                   name="descripcion" 

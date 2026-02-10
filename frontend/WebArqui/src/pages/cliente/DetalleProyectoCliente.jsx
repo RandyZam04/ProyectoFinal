@@ -1,125 +1,137 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import AvanceCliente from "./AvancesCliente";
 
-export default function DetalleProyectoAdmin() {
+export default function DetalleProyectoCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  const [proyecto, setProyecto] = useState(null);
-  const [rubros, setRubros] = useState([{ nombre: "", cantidad: 1, costo_unitario: 0 }]);
-  const [estado, setEstado] = useState("Pendiente");
+  const [proyecto, setProyecto] = useState([]);
+  const [tabActual, setTabActual] = useState("modulos");
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/proyectos_detalle/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Proyecto no encontrado");
-        return res.json();
-      })
-      .then(data => setProyecto(data))
-      .catch(err => console.error("Error:", err));
+    const cargarDatos = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/proyecto-individual/${id}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setProyecto(data ? [data] : []);
+      } catch (err) {
+        console.error("Error de red:", err);
+      }
+    };
+    if (id) cargarDatos();
   }, [id]);
 
-  const totalPresupuesto = rubros.reduce((acc, r) => acc + (Number(r.cantidad) * Number(r.costo_unitario)), 0);
-
-  const manejarCambioRubro = (index, e) => {
-    const { name, value } = e.target;
-    const nuevosRubros = [...rubros];
-    nuevosRubros[index][name] = value;
-    setRubros(nuevosRubros);
+  const formatearFecha = (fechaStr) => {
+    if (!fechaStr) return "Sin fecha";
+    const fecha = new Date(fechaStr);
+    return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
-
-  const agregarRubro = () => setRubros([...rubros, { nombre: "", cantidad: 1, costo_unitario: 0 }]);
-
-  const guardarPresupuesto = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/presupuestos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            id_proyecto: id, 
-            estado, 
-            fecha: new Date().toISOString().split('T')[0],
-            rubros 
-        })
-      });
-      if (res.ok) {
-        alert("Presupuesto guardado con éxito");
-        navigate("/admin/proyectos");
-      }
-    } catch {
-      alert("Error al conectar con el servidor");
-    }
-  };
-
-  if (!proyecto) return <div className="p-10 text-center">Cargando detalles del proyecto...</div>;
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2 text-gray-800">
-          Presupuesto: {proyecto.nombre}
-        </h1>
-        <p className="text-gray-600 mb-8">{proyecto.descripcion}</p>
+    <div className="min-h-screen bg-gray-50 p-8 font-sans">
+      <div className="max-w-6xl mx-auto">
         
-        <div className="bg-white p-6 rounded-xl shadow-lg">
-          <div className="flex justify-between items-center mb-6 border-b pb-4">
-            <h3 className="text-xl font-semibold">Configuración de Rubros</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-500">Estado:</span>
-              <select 
-                value={estado} 
-                onChange={(e) => setEstado(e.target.value)}
-                className="border border-gray-300 p-2 rounded-md text-sm bg-gray-50"
-              >
-                <option value="Pendiente">Pendiente</option>
-                <option value="Enviado">Enviado</option>
-                <option value="Aprobado">Aprobado</option>
-              </select>
-            </div>
-          </div>
-
-          {rubros.map((rubro, index) => {
-            const subtotal = Number(rubro.cantidad) * Number(rubro.costo_unitario);
-            const porcentaje = totalPresupuesto > 0 ? ((subtotal / totalPresupuesto) * 100).toFixed(1) : 0;
-
-            return (
-              <div key={index} className="flex gap-4 mb-4 items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <div className="flex-1">
-                  <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Descripción</label>
-                  <input name="nombre" placeholder="Ej: Materiales" className="w-full border-b border-gray-300 bg-transparent p-1 focus:border-blue-500 outline-none" value={rubro.nombre} onChange={(e) => manejarCambioRubro(index, e)} />
-                </div>
-                <div className="w-24">
-                  <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Cant.</label>
-                  <input name="cantidad" type="number" className="w-full border-b border-gray-300 bg-transparent p-1 focus:border-blue-500 outline-none" value={rubro.cantidad} onChange={(e) => manejarCambioRubro(index, e)} />
-                </div>
-                <div className="w-32">
-                  <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Costo Unit.</label>
-                  <input name="costo_unitario" type="number" className="w-full border-b border-gray-300 bg-transparent p-1 focus:border-blue-500 outline-none" value={rubro.costo_unitario} onChange={(e) => manejarCambioRubro(index, e)} />
-                </div>
-                <div className="text-right w-44">
-                  <p className="font-bold text-blue-700 text-lg">${subtotal.toFixed(2)}</p>
-                  <p className="text-[10px] text-blue-400 font-bold">{porcentaje}% del total</p>
-                </div>
+        {/* HEADER */}
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => tabActual === "modulos" ? navigate("/cliente/proyectos") : setTabActual("modulos")} 
+              className="group flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-sm border border-gray-100 hover:border-blue-500 transition-all"
+            >
+              {/* Icono dinámico con una pequeña animación */}
+              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gray-50 group-hover:bg-blue-50 transition-colors">
+                {tabActual === "modulos" ? (
+                  <span className="text-gray-600 group-hover:text-blue-600 text-lg">←</span>
+                ) : (
+                  <span className="text-gray-600 group-hover:text-blue-600 text-base">🏠</span>
+                )}
               </div>
-            );
-          })}
-          
-          <div className="mt-8 pt-6 border-t flex justify-between items-center">
-            <button onClick={agregarRubro} className="text-blue-600 font-bold hover:text-blue-800 transition-colors">
-              + AGREGAR OTRO RUBRO
+
+              {/* Texto explicativo dinámico */}
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
+                  Regresar a
+                </span>
+                <span className="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-none">
+                  {tabActual === "modulos" ? "Mis Proyectos" : "Menú Principal"}
+                </span>
+              </div>
             </button>
-            <div className="text-right">
-              <p className="text-xs text-gray-500 uppercase font-black">Total a Presupuestar</p>
-              <p className="text-4xl font-black text-gray-900">${totalPresupuesto.toFixed(2)}</p>
-              <button 
-                onClick={guardarPresupuesto} 
-                className="bg-blue-600 text-white px-10 py-3 rounded-lg mt-4 font-bold hover:bg-blue-700 shadow-md transition-all"
-              >
-                GUARDAR PRESUPUESTO
-              </button>
-            </div>
+            {proyecto.map((p) => (
+              <div key={p.idproyectos}>
+                <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">{p.nombre}</h1>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">
+                  {tabActual === "modulos" ? "Panel de Control" : "Bitácora de Avances"}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* CONTENIDO DINÁMICO */}
+        {tabActual === "modulos" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Módulos Disponibles</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button 
+                  onClick={() => setTabActual("avances")} 
+                  className="group bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50 hover:border-blue-500 transition-all text-left relative overflow-hidden"
+                >
+                  <div className="bg-blue-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform">📸</div>
+                  <h3 className="text-2xl font-black text-gray-900 leading-none mb-2">Bitácora de Avances</h3>
+                  <p className="text-gray-400 text-sm font-medium">Fotos y reportes diarios.</p>
+                </button>
+                <button 
+                  onClick={() => navigate(`/cliente/proyecto/${id}/presupuesto`)} 
+                  className="group bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50 hover:border-emerald-500 transition-all text-left relative overflow-hidden"
+                >
+                  <div className="bg-emerald-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform">💰</div>
+                  <h3 className="text-2xl font-black text-gray-900 leading-none mb-2">Presupuesto y Costos</h3>
+                  <p className="text-gray-400 text-sm font-medium">Control de inversión y pagos realizados.</p>
+                </button>
+              </div>
+            </div>
+
+            {/* BARRA LATERAL INFO */}
+            <div className="space-y-6">
+              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Información de Obra</h3>
+              {proyecto.map((p) => (
+                <div key={`side-${p.idproyectos}`} className="bg-gray-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+                  <div className="relative z-10 space-y-6">
+                    <div>
+                      <p className="text-[10px] font-black text-gray-500 uppercase mb-2">Cronograma</p>
+                      <div className="grid grid-cols-2 gap-4">
+                         <div>
+                            <p className="text-[9px] text-blue-400 uppercase font-bold">Inicio</p>
+                            <p className="text-sm font-bold italic">{formatearFecha(p.fecha_inicio)}</p>
+                         </div>
+                         <div>
+                            <p className="text-[9px] text-red-400 uppercase font-bold">Fin</p>
+                            <p className="text-sm font-bold italic">{formatearFecha(p.fecha_fin)}</p>
+                         </div>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-gray-500 uppercase mb-4">Estado</p>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-3 h-3 rounded-full animate-pulse ${p.estado === 1 ? "bg-green-500" : "bg-yellow-500"}`}></span>
+                        <span className="font-black text-xs uppercase tracking-widest">{p.estado === 1 ? "En Ejecución" : "Revisión"}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-600 rounded-full blur-[80px] opacity-20"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* VISTA TWITTER FULL WIDTH */
+          <div className="animate-in slide-in-from-bottom-4 duration-500">
+             <AvanceCliente idProyecto={id} />
+          </div>
+        )}
       </div>
     </div>
   );

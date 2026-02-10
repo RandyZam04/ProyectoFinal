@@ -49,4 +49,32 @@ router.get("/usuarios", async (req, res) => {
   }
 });
 
+router.post("/usuarios/registro", async (req, res) => {
+  const { nombre, email, password, admin } = req.body;
+
+  try {
+    const [existente] = await pool.query("SELECT * FROM usuarios WHERE email = ?", [email]);
+    
+    if (existente.length > 0) {
+      return res.status(400).json({ mensaje: "El email ya está registrado" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const [result] = await pool.query(
+      "INSERT INTO usuarios (nombre, email, password, admin, activo, created_at) VALUES (?, ?, ?, ?, 1, NOW())",
+      [nombre, email, hashedPassword, admin || 0]
+    );
+    
+    res.status(201).json({ 
+      mensaje: "Usuario creado con éxito", 
+      id: result.insertId 
+    });
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
+});
+
 export default router;
