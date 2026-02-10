@@ -15,7 +15,7 @@ router.get("/presupuestos/proyecto/:id_proyecto", async (req, res) => {
     }
 
     const [rubros] = await pool.query(
-      "SELECT nombre, descripcion, costo as monto FROM rubros WHERE idpresupuesto = ?",
+      "SELECT idrubros, nombre, descripcion, costo as monto FROM rubros WHERE idpresupuesto = ?",
       [presupuesto[0].idpresupuesto]
     );
 
@@ -69,6 +69,19 @@ router.post("/presupuestos", async (req, res) => {
     res.status(500).json({ message: "Error crítico: No se guardó nada" });
   } finally {
     connection.release();
+  }
+});
+
+router.get("/gastos/rubro/:id_rubro", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM gastos_rubros WHERE id_rubro = ? ORDER BY fecha DESC",
+      [req.params.id_rubro]
+    );
+    res.json(rows);
+  } catch (error) {
+    console.error("Error en gastos por rubro:", error);
+    res.status(500).json({ message: "Error al obtener gastos" });
   }
 });
 
