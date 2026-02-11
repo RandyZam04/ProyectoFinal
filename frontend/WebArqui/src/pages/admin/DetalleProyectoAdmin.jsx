@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Solo añadí useNavigate aquí
+import { useParams, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; 
 import SeccionPresupuesto from "./SeccionPresupuesto"; 
@@ -7,7 +7,7 @@ import SeccionAvances from "./SeccionAvances";
 
 export default function DetalleProyectoAdmin() {
   const { id } = useParams();
-  const navigate = useNavigate(); // <-- Añadido
+  const navigate = useNavigate();
   const [tabActual, setTabActual] = useState("resumen");
   const [proyecto, setProyecto] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,6 @@ export default function DetalleProyectoAdmin() {
     ejecucion: 0 
   });
 
-  // --- TU LÓGICA DE CARGA (INTACTA) ---
   useEffect(() => {
     const cargarTodo = async () => {
       try {
@@ -70,134 +69,118 @@ export default function DetalleProyectoAdmin() {
     cargarTodo();
   }, [id]);
 
-  // --- TU LÓGICA DE PDF (INTACTA) ---
   const exportarPDF = () => {
     if (!proyecto) return;
     const doc = new jsPDF();
-    const fechaReporte = new Date().toLocaleDateString();
-
-    doc.setFontSize(18);
-    doc.text(`Reporte de Obra: ${proyecto.nombre}`, 14, 20);
     
+    doc.setFont("helvetica");
+    doc.text(`STUDIO Z - Reporte de Obra: ${proyecto.nombre}`, 14, 20);
     doc.setFontSize(10);
-    doc.text(`Generado el: ${fechaReporte}`, 14, 28);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 28);
 
     autoTable(doc, {
       startY: 35,
-      head: [['Indicador', 'Valor']],
+      head: [['Concepto', 'Valor']],
       body: [
         ['Presupuesto Asignado', `$${metricas.presupuestoObra.toLocaleString()}`],
         ['Gasto Acumulado', `$${metricas.totalGastado.toLocaleString()}`],
         ['Saldo Disponible', `$${metricas.balance.toLocaleString()}`],
-        ['Porcentaje de Ejecución', `${metricas.ejecucion.toFixed(2)}%`],
+        ['Ejecución', `${metricas.ejecucion.toFixed(2)}%`],
       ],
-      headStyles: { fillColor: [29, 78, 216] }
+      styles: { fillColor: [24, 32, 43], fontStyle: 'bold' } 
     });
 
-    doc.save(`Reporte_${proyecto.nombre}.pdf`);
+    doc.save(`StudioZ_Reporte_${proyecto.nombre}.pdf`);
   };
 
   const obtenerColorEjecucion = (p) => {
-    if (p > 100) return "text-red-600 animate-pulse";
-    if (p > 90) return "text-red-500";
-    if (p > 70) return "text-orange-500";
-    return "text-green-600";
+    if (p > 100) return "text-red-700";
+    return "text-[#18202b]";
   };
 
-  if (loading) return <div className="p-20 text-center font-black text-gray-400 uppercase tracking-widest">Sincronizando...</div>;
+  if (loading) return <div className="p-20 text-center font-light text-[#18202b] tracking-widest text-sm">CARGANDO DATOS...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <div className="bg-white border-b border-gray-200 pt-12 pb-1">
-        <div className="max-w-6xl mx-auto px-8">
+    <div className="min-h-screen bg-[#f4f0eb] font-sans">
+      <div className="bg-white border-b border-[#d4cbba] pt-12 pb-1">
+        <div className="max-w-7xl mx-auto px-8">
           
-          {/* AQUÍ ESTÁ EL BOTÓN DE REGRESAR */}
           <button 
             onClick={() => navigate(-1)} 
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-blue-600 transition-colors mb-4 group"
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#646e75] hover:text-[#18202b] mb-6 block"
           >
-            <span className="text-lg group-hover:-translate-x-1 transition-transform">←</span>
-            Regresar
+            ← Regresar
           </button>
 
-          <div className="flex justify-between items-end mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
             <div>
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Gestión de Obra</span>
-              <h1 className="text-5xl font-black text-gray-900 tracking-tighter mt-1">{proyecto?.nombre}</h1>
-              <p className="text-gray-400 mt-2 text-lg italic">"{proyecto?.descripcion}"</p>
+              <span className="bg-[#18202b] text-white px-2 py-1 text-[9px] font-bold uppercase tracking-widest">Proyecto</span>
+              <h1 className="text-4xl lg:text-5xl font-light text-[#18202b] mt-3 uppercase">{proyecto?.nombre}</h1>
+              <p className="text-[#646e75] mt-2 text-sm font-medium max-w-2xl">{proyecto?.descripcion}</p>
             </div>
             
             <div className="flex items-center gap-4">
               <button 
                 onClick={exportarPDF}
-                className="bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg"
+                className="border border-[#18202b] text-[#18202b] hover:bg-[#18202b] hover:text-white px-6 py-3 font-bold text-[10px] uppercase tracking-widest transition-all rounded-none"
               >
-                Exportar PDF
+                Descargar Informe
               </button>
-              <div className="bg-blue-50 px-6 py-3 rounded-2xl border border-blue-100 text-right">
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Estatus</p>
-                <p className="font-black text-blue-700 text-xl italic tracking-tighter">Activo</p>
-              </div>
             </div>
           </div>
           
-          <div className="flex gap-10">
+          <div className="flex gap-12 border-b border-transparent">
             {["resumen", "presupuesto", "avances"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setTabActual(tab)}
-                className={`pb-4 text-xs font-black uppercase tracking-[0.2em] relative transition-colors ${
-                  tabActual === tab ? "text-blue-700" : "text-gray-300 hover:text-gray-500"
+                className={`pb-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all border-b-2 ${
+                  tabActual === tab ? "border-[#18202b] text-[#18202b]" : "border-transparent text-[#bfb3a3] hover:text-[#646e75]"
                 }`}
               >
                 {tab}
-                {tabActual === tab && (
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-700 rounded-t-full shadow-md"></div>
-                )}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-8">
+      <div className="max-w-7xl mx-auto p-8 lg:p-12">
         {tabActual === "resumen" && (
-          <div className="animate-fadeIn space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-gray-50">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Ejecución Presupuestaria</p>
-                <p className={`text-6xl font-black tracking-tighter ${obtenerColorEjecucion(metricas.ejecucion)}`}>
-                  {metricas.ejecucion.toFixed(1)}%
-                </p>
-              </div>
+          <div className="animate-fadeIn space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[#d4cbba] bg-white">
+               
+               <div className="p-12 border-b md:border-b-0 md:border-r border-[#d4cbba]">
+                 <p className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-[0.2em] mb-4">Progreso de Obra</p>
+                 <p className={`text-6xl font-extralight ${obtenerColorEjecucion(metricas.ejecucion)}`}>
+                   {metricas.ejecucion.toFixed(1)}<span className="text-2xl text-[#bfb3a3]">%</span>
+                 </p>
+               </div>
 
-              <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-gray-50">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Tiempo Transcurrido</p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-6xl font-black text-gray-900 tracking-tighter">
+               <div className="p-12 border-b md:border-b-0 md:border-r border-[#d4cbba]">
+                 <p className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-[0.2em] mb-4">Días en Ejecución</p>
+                 <p className="text-6xl font-extralight text-[#18202b]">
                     {Math.floor((new Date() - new Date(proyecto?.fecha_inicio)) / (1000*60*60*24)) || 1}
-                  </p>
-                  <p className="text-xl font-black text-gray-300 uppercase italic">Días</p>
-                </div>
-              </div>
+                 </p>
+               </div>
 
-              <div className="bg-blue-700 p-10 rounded-[2.5rem] text-white shadow-xl flex flex-col justify-center">
-                <p className="text-2xl font-bold italic">"El orden en el presupuesto es el éxito en la entrega."</p>
-              </div>
+               <div className="p-12 bg-[#18202b] text-[#f4f0eb] flex items-center">
+                 <p className="text-lg font-light italic leading-relaxed">"La arquitectura es la voluntad de la época traducida a espacio."</p>
+               </div>
             </div>
 
-            <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-              <div className="pb-6 md:pb-0 md:pr-10">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-2">Presupuesto Global</p>
-                <p className="text-4xl font-black text-gray-900 tracking-tighter">${metricas.presupuestoObra.toLocaleString()}</p>
+            <div className="bg-[#dad8cc]/30 p-12 border border-[#d4cbba] flex flex-col md:flex-row justify-between gap-8">
+              <div>
+                <p className="text-[9px] font-bold text-[#646e75] uppercase mb-2 tracking-widest">Presupuesto Total</p>
+                <p className="text-3xl font-light text-[#18202b]">${metricas.presupuestoObra.toLocaleString()}</p>
               </div>
-              <div className="py-6 md:py-0 md:px-10 text-center">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-2">Total Gastado</p>
-                <p className="text-4xl font-black text-blue-700 tracking-tighter">${metricas.totalGastado.toLocaleString()}</p>
+              <div className="md:text-center">
+                <p className="text-[9px] font-bold text-[#646e75] uppercase mb-2 tracking-widest">Ejecutado</p>
+                <p className="text-3xl font-light text-[#474b54]">${metricas.totalGastado.toLocaleString()}</p>
               </div>
-              <div className="pt-6 md:pt-0 md:pl-10 text-right">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-2">Balance Disponible</p>
-                <p className={`text-4xl font-black tracking-tighter ${metricas.balance < 0 ? 'text-red-600' : 'text-gray-900'}`}>
+              <div className="md:text-right">
+                <p className="text-[9px] font-bold text-[#646e75] uppercase mb-2 tracking-widest">Disponible</p>
+                <p className={`text-3xl font-light ${metricas.balance < 0 ? 'text-red-700' : 'text-[#18202b]'}`}>
                   ${metricas.balance.toLocaleString()}
                 </p>
               </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useNavigate } from "react-router-dom";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF19A0', '#19FFD1'];
+const COLORS = ['#18202b', '#474b54', '#646e75', '#7d8b8d', '#bfb3a3', '#d4cbba', '#dad8cc'];
 
 export default function ReportesGlobales() {
   const navigate = useNavigate();
@@ -50,46 +50,43 @@ export default function ReportesGlobales() {
   }, []);
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center font-black text-gray-400 animate-pulse">
-      CARGANDO ANALÍTICA...
+    <div className="min-h-screen bg-[#f4f0eb] flex items-center justify-center font-light uppercase tracking-widest text-[#bfb3a3] text-xs">
+      Analizando datos...
     </div>
   );
 
   if (error) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center text-red-600 font-bold">
+    <div className="min-h-screen bg-[#f4f0eb] flex items-center justify-center text-red-600 font-bold">
       {error}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans text-gray-900">
+    <div className="min-h-screen bg-[#f4f0eb] p-8 lg:p-12 font-sans text-[#18202b]">
       <div className="max-w-6xl mx-auto">
         
-        {/* Encabezado dinámico */}
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-16 border-b border-[#18202b] pb-6">
           <div>
             <button 
               onClick={() => navigate("/admin")}
-              className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-2 hover:underline"
+              className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.3em] mb-2 hover:text-[#18202b]"
             >
-              ← Volver al Panel
+              ← Volver
             </button>
-            <h1 className="text-5xl font-black tracking-tighter">Reportes Globales</h1>
-            <p className="text-gray-400 mt-2 text-lg italic">Datos extraídos en tiempo real de la base de datos.</p>
+            <h1 className="text-4xl font-light tracking-wide uppercase">Reportes</h1>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Inversión Total Comprometida</p>
-            <p className="text-4xl font-black text-blue-600">
+            <p className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Volumen Total</p>
+            <p className="text-3xl font-light text-[#18202b]">
               ${inversionGlobal.toLocaleString()}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           
-          {/* Gráfico Circular Real */}
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-100 flex flex-col items-center">
-            <h2 className="text-2xl font-black mb-6 text-center">Distribución de Gastos</h2>
+          <div className="bg-white p-12 border border-[#d4cbba] flex flex-col items-center shadow-sm">
+            <h2 className="text-xl font-light mb-8 text-center uppercase tracking-widest">Gastos por Partida</h2>
             {gastosPorCategoria.length > 0 ? (
               <ResponsiveContainer width="100%" height={350}>
                 <PieChart>
@@ -97,48 +94,51 @@ export default function ReportesGlobales() {
                     data={gastosPorCategoria}
                     cx="50%"
                     cy="50%"
-                    outerRadius={100}
+                    outerRadius={120}
+                    innerRadius={80}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={false}
+                    stroke="none"
                   >
                     {gastosPorCategoria.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-                  <Legend />
+                  <Tooltip 
+                    formatter={(value) => `$${value.toLocaleString()}`} 
+                    contentStyle={{ backgroundColor: '#18202b', color: '#fff', border: 'none', fontSize: '12px' }}
+                    itemStyle={{ color: '#fff' }}
+                  />
+                  <Legend iconType="square" wrapperStyle={{ fontSize: '10px', textTransform: 'uppercase', color: '#646e75' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[350px] flex items-center justify-center text-gray-400 italic text-center">
-                Sin datos de gastos registrados aún.
-              </div>
+              <div className="text-[#bfb3a3] italic">Sin datos.</div>
             )}
           </div>
 
-          {/* Resumen Financiero con Datos de la DB */}
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-100 flex flex-col justify-center">
-            <h2 className="text-2xl font-black mb-8 text-center">Resumen Financiero Real</h2>
-            <div className="space-y-6">
-              <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Proyectos Activos</span>
-                <span className="text-2xl font-black">{resumen.proyectosActivos}</span>
+          <div className="bg-white p-12 border border-[#d4cbba] flex flex-col justify-center shadow-sm">
+            <h2 className="text-xl font-light mb-10 text-center uppercase tracking-widest">Resumen Ejecutivo</h2>
+            <div className="space-y-8">
+              <div className="flex justify-between items-center border-b border-[#f4f0eb] pb-4">
+                <span className="text-[10px] font-bold text-[#bfb3a3] uppercase tracking-widest">Obras en Curso</span>
+                <span className="text-2xl font-light">{resumen.proyectosActivos}</span>
               </div>
-              <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Utilidad Proyectada</span>
-                <span className="text-2xl font-black text-green-600">
+              <div className="flex justify-between items-center border-b border-[#f4f0eb] pb-4">
+                <span className="text-[10px] font-bold text-[#bfb3a3] uppercase tracking-widest">Utilidad Estimada</span>
+                <span className="text-2xl font-light text-[#7d8b8d]">
                   ${resumen.utilidadProyectada.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Gastos Acumulados</span>
-                <span className="text-2xl font-black text-red-600">
+                <span className="text-[10px] font-bold text-[#bfb3a3] uppercase tracking-widest">Egresos Totales</span>
+                <span className="text-2xl font-light text-[#18202b]">
                   ${resumen.gastosTotales.toLocaleString()}
                 </span>
               </div>
             </div>
-            <p className="mt-8 text-[10px] text-gray-300 text-center uppercase tracking-widest font-bold">
-              Cálculos basados en presupuestos y rubros pagados
+            <p className="mt-12 text-[9px] text-[#bfb3a3] text-center uppercase tracking-widest font-bold">
+              Datos generados en tiempo real
             </p>
           </div>
 

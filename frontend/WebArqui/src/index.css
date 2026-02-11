@@ -1,3 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&family=Montserrat:wght@100;200;300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* STUDIO Z THEME */
+body {
+  background-color: #f4f0eb; /* Crema Papel */
+  color: #18202b; /* Navy Profundo */
+  font-family: 'Manrope', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Scrollbar Minimalista */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f0eb;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4cbba;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #18202b;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

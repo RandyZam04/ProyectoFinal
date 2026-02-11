@@ -29,8 +29,8 @@ export const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   if (requireAdmin && cargando) {
     return (
-      <div className="flex items-center justify-center h-screen font-black text-blue-600 animate-pulse">
-        VERIFICANDO ENTORNO SEGURO...
+      <div className="flex items-center justify-center h-screen bg-[#f4f0eb] text-[#18202b] font-bold text-xs uppercase tracking-[0.3em]">
+        Verificando Credenciales...
       </div>
     );
   }
@@ -41,15 +41,15 @@ export const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   if (requireAdmin && ipActual !== IP_AUTORIZADA) {
     return (
-      <div className="flex items-center justify-center h-screen bg-red-50 p-4">
-        <div className="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-md border border-red-100">
-          <div className="text-5xl mb-4">🚫</div>
-          <h1 className="text-xl font-black text-gray-900 uppercase italic">Acceso Restringido</h1>
-          <p className="text-gray-500 mt-2 text-sm">
-            Tu ubicación actual no está autorizada para gestionar la base de datos.
+      <div className="flex items-center justify-center h-screen bg-[#f4f0eb] p-4">
+        <div className="bg-white p-12 border border-red-200 text-center max-w-md shadow-sm">
+          <div className="text-4xl mb-4">🚫</div>
+          <h1 className="text-xl font-light text-[#18202b] uppercase tracking-wide">Acceso Restringido</h1>
+          <p className="text-[#646e75] mt-4 text-sm font-light">
+            Ubicación no autorizada para gestión administrativa.
           </p>
-          <div className="mt-6 p-3 bg-gray-100 rounded-xl font-mono text-[10px] text-gray-400">
-            IP_DTC: {ipActual}
+          <div className="mt-8 p-3 bg-[#f9f8f6] font-mono text-[10px] text-[#bfb3a3] uppercase border border-[#dad8cc]">
+            IP_DETECTADA: {ipActual}
           </div>
         </div>
       </div>

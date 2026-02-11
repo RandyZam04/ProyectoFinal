@@ -51,25 +51,22 @@ export default function RegistroCliente() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFD] flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-[#f4f0eb] flex items-center justify-center p-6 font-sans">
       <div className="max-w-md w-full">
         
-        {/* ENCABEZADO */}
-        <div className="text-center mb-10">
-          <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mb-3 block">Acceso Corporativo</span>
-          <h2 className="text-5xl font-black text-gray-900 tracking-tighter italic">Nuevo Cliente</h2>
-          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-4">
-            Cree una cuenta para la gestión de proyectos
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-light text-[#18202b] uppercase tracking-wide">Nuevo Cliente</h2>
+          <div className="h-px w-12 bg-[#18202b] mx-auto mt-4 mb-2"></div>
+          <p className="text-[#646e75] text-[9px] font-bold uppercase tracking-widest">
+            Alta en Base de Datos
           </p>
         </div>
 
-        {/* TARJETA DE REGISTRO */}
-        <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-gray-200/50 border border-gray-100">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="bg-white p-12 border border-[#d4cbba] shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* NOMBRE */}
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Nombre Completo</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Nombre Completo</label>
               <input 
                 type="text"
                 name="nombre"
@@ -77,13 +74,12 @@ export default function RegistroCliente() {
                 value={formData.nombre}
                 onChange={handleChange}
                 placeholder="Ej. Juan Pérez"
-                className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
               />
             </div>
 
-            {/* CORREO */}
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Correo Electrónico</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Correo Electrónico</label>
               <input 
                 type="email"
                 name="correo"
@@ -91,13 +87,12 @@ export default function RegistroCliente() {
                 value={formData.correo}
                 onChange={handleChange}
                 placeholder="cliente@empresa.com"
-                className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
               />
             </div>
 
-            {/* PASSWORD */}
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Contraseña</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Contraseña</label>
               <input 
                 type="password"
                 name="password"
@@ -105,13 +100,12 @@ export default function RegistroCliente() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
               />
             </div>
 
-            {/* CONFIRMAR PASSWORD */}
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Confirmar Contraseña</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Confirmar Contraseña</label>
               <input 
                 type="password"
                 name="confirmarPassword"
@@ -119,34 +113,31 @@ export default function RegistroCliente() {
                 value={formData.confirmarPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
               />
             </div>
 
-            {/* ERROR DISPLAY */}
             {error && (
-              <div className="bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest p-4 rounded-2xl text-center border border-red-100">
+              <div className="bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest p-4 border border-red-100 text-center">
                 ⚠️ {error}
               </div>
             )}
 
-            {/* BOTÓN SUBMIT */}
             <button 
               type="submit" 
               disabled={cargando}
-              className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-blue-600 transition-all active:scale-95 disabled:opacity-50"
+              className="w-full bg-[#18202b] text-white py-4 font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-[#474b54] transition-all disabled:opacity-50 rounded-none border border-[#18202b]"
             >
-              {cargando ? "Registrando..." : "Crear Cuenta Cliente"}
+              {cargando ? "Registrando..." : "Crear Cuenta"}
             </button>
           </form>
         </div>
 
-        {/* VOLVER */}
         <button 
           onClick={() => navigate("/cliente")}
-          className="w-full mt-8 text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-colors"
+          className="w-full mt-8 text-[10px] font-bold text-[#bfb3a3] uppercase tracking-widest hover:text-[#18202b] transition-colors"
         >
-          ← Cancelar y volver al panel
+          ← Cancelar
         </button>
 
       </div>

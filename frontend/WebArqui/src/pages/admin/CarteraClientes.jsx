@@ -54,73 +54,67 @@ export default function CarteraClientes() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans text-gray-900">
+    <div className="min-h-screen bg-[#f4f0eb] p-8 font-sans">
       <div className="max-w-6xl mx-auto">
         
-        {/* Encabezado */}
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-12 border-b border-[#18202b] pb-6">
           <div>
             <button 
               onClick={() => navigate("/admin")}
-              className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-2 hover:underline"
+              className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.3em] mb-2 hover:text-[#18202b]"
             >
-              ← Volver al Panel
+              ← Volver
             </button>
-            <h1 className="text-5xl font-black tracking-tighter">Cartera de Clientes</h1>
-            <p className="text-gray-400 mt-2 text-lg italic">Visualización de activos por cliente.</p>
+            <h1 className="text-4xl font-light text-[#18202b] uppercase tracking-wide">Cartera</h1>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Clientes Totales</p>
-            <p className="text-4xl font-black text-blue-600">{clientesConProyectos.length}</p>
+            <p className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Total Registros</p>
+            <p className="text-4xl font-thin text-[#18202b]">{clientesConProyectos.length}</p>
           </div>
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-             <p className="text-gray-400 animate-pulse font-black uppercase tracking-widest">Cargando base de datos...</p>
-          </div>
+          <div className="text-center p-20 text-[#bfb3a3] uppercase tracking-widest text-xs">Cargando base de datos...</div>
         ) : (
           <div className="grid grid-cols-1 gap-8">
             {clientesConProyectos.map((cliente) => (
-              <div key={cliente.idusuarios} className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden">
+              <div key={cliente.idusuarios} className="bg-white border border-[#d4cbba] p-0 shadow-sm hover:border-[#18202b] transition-all">
                 
-                <div className="p-8 md:p-10 flex flex-col md:flex-row justify-between items-center">
+                <div className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center bg-[#fcfbf9] border-b border-[#d4cbba]">
                   <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center text-white text-2xl font-black">
+                    <div className="w-12 h-12 bg-[#18202b] flex items-center justify-center text-white text-xl font-light">
                       {cliente.nombre ? cliente.nombre.charAt(0) : "U"}
                     </div>
                     <div>
-                      <h2 className="text-3xl font-black tracking-tight">{cliente.nombre}</h2>
-                      <p className="text-gray-400">{cliente.email}</p>
-                      <span className={`inline-block mt-2 px-3 py-1 rounded-full text-[10px] font-black uppercase ${cliente.activo === 1 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                        {cliente.activo === 1 ? 'Cuenta Activa' : 'Inactivo'}
+                      <h2 className="text-2xl font-light text-[#18202b] uppercase tracking-wide">{cliente.nombre}</h2>
+                      <p className="text-[#646e75] text-xs font-mono">{cliente.email}</p>
+                      <span className={`inline-block mt-2 px-2 py-0.5 text-[8px] font-bold uppercase border ${cliente.activo === 1 ? 'border-[#18202b] text-[#18202b]' : 'border-red-300 text-red-400'}`}>
+                        {cliente.activo === 1 ? 'Activo' : 'Inactivo'}
                       </span>
                     </div>
                   </div>
 
                   <div className="text-right mt-6 md:mt-0">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Inversión Total Acumulada</p>
-                    <p className="text-4xl font-black text-gray-900">
+                    <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest">Inversión Histórica</p>
+                    <p className="text-3xl font-light text-[#18202b]">
                       ${cliente.totalInvertido.toLocaleString('en-US', { minimumFractionDigits: 0 })}
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-8 border-t border-gray-100">
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Proyectos Vinculados</p>
+                <div className="p-8">
+                  <p className="text-[9px] font-bold text-[#18202b] uppercase tracking-widest mb-6 border-b border-[#dad8cc] pb-2 inline-block">Proyectos Asociados</p>
                   
                   {cliente.proyectos.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-0 border border-[#dad8cc]">
                       {cliente.proyectos.map(proy => (
-                        <div key={proy.idproyectos} className="bg-white p-6 rounded-3xl shadow-sm flex justify-between items-center border border-transparent hover:border-blue-500 transition-all cursor-pointer"
+                        <div key={proy.idproyectos} className="p-4 flex justify-between items-center border-b border-[#dad8cc] last:border-0 hover:bg-[#f4f0eb] cursor-pointer"
                              onClick={() => navigate(`/admin/proyectos/${proy.idproyectos}`)}>
                           <div>
-                            <span className="text-[10px] font-black text-blue-600 uppercase block mb-1">Nombre del Proyecto</span>
-                            <span className="font-bold text-xl text-gray-800">{proy.nombre}</span>
+                            <span className="font-medium text-[#18202b] text-sm uppercase">{proy.nombre}</span>
                           </div>
                           <div className="text-right">
-                            <span className="text-[10px] font-black text-gray-400 uppercase block mb-1">Presupuesto</span>
-                            <span className="font-black text-2xl text-gray-900">
+                            <span className="font-light text-[#646e75] text-sm">
                                 ${proy.montoTotal.toLocaleString('en-US', { minimumFractionDigits: 0 })}
                             </span>
                           </div>
@@ -128,7 +122,7 @@ export default function CarteraClientes() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-400 italic">No hay proyectos para este cliente.</p>
+                    <p className="text-[#bfb3a3] italic text-xs">Sin proyectos activos.</p>
                   )}
                 </div>
               </div>

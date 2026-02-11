@@ -41,37 +41,40 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FBFBFD] font-sans p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#f4f0eb] p-6">
       <div className="max-w-md w-full">
         
-        {/* LOGO O TÍTULO */}
-        <div className="text-center mb-10">
-          <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.5em] mb-4 block">Portal Corporativo</span>
-          <h1 className="text-6xl font-black text-gray-900 tracking-tighter italic">Acceso</h1>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-extralight text-[#18202b] tracking-[0.2em] mb-2">
+            STUDIO <span className="font-medium">Z</span>
+          </h1>
+          <div className="h-px w-16 bg-[#18202b] mx-auto mb-4"></div>
+          <p className="text-[10px] font-bold text-[#646e75] uppercase tracking-[0.4em]">
+            Portal Corporativo
+          </p>
         </div>
 
-        {/* CARD DE LOGIN */}
-        <div className="bg-white p-10 rounded-[3.5rem] shadow-2xl shadow-gray-200/60 border border-gray-50">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white p-12 border border-[#d4cbba] shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-8">
             
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Email de Usuario</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Usuario</label>
               <input
                 type="email"
-                placeholder="nombre@empresa.com"
-                className="w-full bg-gray-50 border border-transparent px-6 py-5 rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                placeholder="email@studioz.com"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
 
-            <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4 mb-2 block">Contraseña</label>
+            <div className="group">
+              <label className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1 block">Clave de Acceso</label>
               <input
                 type="password"
                 placeholder="••••••••"
-                className="w-full bg-gray-50 border border-transparent px-6 py-5 rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] px-4 py-3 text-sm font-medium text-[#18202b] focus:border-[#18202b] focus:bg-white transition-all outline-none rounded-none placeholder-[#dad8cc]"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -80,27 +83,21 @@ export default function Login() {
 
             <button 
               disabled={cargando}
-              className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-xl hover:bg-blue-600 transition-all active:scale-95 disabled:opacity-50 mt-4"
+              className="w-full bg-[#18202b] text-white py-4 font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-[#474b54] transition-all disabled:opacity-50 rounded-none border border-[#18202b]"
             >
-              {cargando ? "Validando..." : "Entrar al Sistema"}
+              {cargando ? "Validando..." : "Ingresar"}
             </button>
           </form>
 
-          {/* SECCIÓN DE REGISTRO */}
-          <div className="mt-10 pt-8 border-t border-gray-50 text-center">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">¿No tienes una cuenta de cliente?</p>
+          <div className="mt-10 pt-6 border-t border-[#f4f0eb] text-center">
             <button 
-              onClick={() => navigate("/registro")} // Ajusta la ruta según tu App.js
-              className="text-blue-600 font-black text-[11px] uppercase tracking-widest hover:text-gray-900 transition-colors"
+              onClick={() => navigate("/registro")}
+              className="text-[#18202b] font-bold text-[9px] uppercase tracking-widest hover:underline decoration-[#d4cbba] transition-all"
             >
-              Registrar nuevo cliente →
+              Registro de Clientes →
             </button>
           </div>
         </div>
-
-        <p className="text-center mt-10 text-[9px] font-black text-gray-300 uppercase tracking-[0.3em]">
-          Secure Access Management System v2.0
-        </p>
       </div>
     </div>
   );

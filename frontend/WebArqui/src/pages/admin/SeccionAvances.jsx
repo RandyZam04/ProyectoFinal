@@ -43,21 +43,14 @@ export default function SeccionAvances({ idProyecto }) {
 
   useEffect(() => { cargarTodo(); }, [cargarTodo]);
 
-  // --- LÓGICA DE APERTURA CORREGIDA ---
   const abrirModal = (avance) => {
-    // Ya no bloqueamos la apertura. Preparamos los adjuntos si existen.
     const adjuntosArray = avance.adjuntos_urls 
       ? avance.adjuntos_urls.split(',').map(url => ({
           url: url.trim(),
           tipo: esPdf(url.trim()) ? "application/pdf" : "image/jpeg"
         }))
       : [];
-
-    const postParaModal = {
-      ...avance,
-      adjuntos: adjuntosArray
-    };
-    
+    const postParaModal = { ...avance, adjuntos: adjuntosArray };
     setSelectedPost(postParaModal);
     setModalOpen(true);
   };
@@ -107,118 +100,115 @@ export default function SeccionAvances({ idProyecto }) {
   }, {});
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10 p-4 font-sans text-gray-900">
+    <div className="max-w-3xl mx-auto space-y-12 p-4 font-sans text-[#18202b]">
       
       {/* FORMULARIO */}
-      <div className="bg-white p-7 rounded-[2.5rem] shadow-xl border border-gray-100">
+      <div className="bg-white p-8 border border-[#d4cbba] shadow-sm">
         <textarea 
-          className="w-full p-5 bg-gray-50 rounded-3xl outline-none focus:ring-2 focus:ring-blue-100 transition-all resize-none font-medium text-gray-700 border-none"
-          placeholder="¿Qué novedades hay hoy?"
+          className="w-full p-4 bg-[#f9f8f6] border border-[#dad8cc] outline-none font-light text-[#18202b] text-sm resize-none rounded-none focus:border-[#18202b] transition-colors"
+          placeholder="Descripción del reporte técnico..."
           rows="3"
           value={form.descripcion}
           onChange={e => setForm({...form, descripcion: e.target.value})}
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
-           <div className="space-y-3">
-              <select className="w-full bg-gray-50 p-3 rounded-2xl text-[11px] font-black uppercase text-gray-500 outline-none" value={form.id_rubro} onChange={e => setForm({...form, id_rubro: e.target.value})}>
-                <option value="">Seleccionar Rubro</option>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+           <div className="space-y-4">
+              <select className="w-full bg-white border border-[#dad8cc] p-3 text-[10px] font-bold uppercase text-[#646e75] outline-none rounded-none" value={form.id_rubro} onChange={e => setForm({...form, id_rubro: e.target.value})}>
+                <option value="">Categoría Relacionada</option>
                 {rubros.map(r => <option key={r.idrubros} value={r.idrubros}>{r.nombre}</option>)}
               </select>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-xs">$</span>
-                <input type="number" placeholder="Monto" className="w-full bg-gray-50 p-3 pl-8 rounded-2xl text-xs font-bold outline-none" value={form.monto_gastado} onChange={e => setForm({...form, monto_gastado: e.target.value})} />
+              <div className="relative border border-[#dad8cc]">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-light text-[#bfb3a3]">$</span>
+                <input type="number" placeholder="Inversión (Opcional)" className="w-full bg-transparent p-3 pl-8 text-xs font-medium outline-none" value={form.monto_gastado} onChange={e => setForm({...form, monto_gastado: e.target.value})} />
               </div>
            </div>
-           <div className="bg-gray-50 p-4 rounded-3xl flex flex-col justify-center gap-2">
+           <div className="border border-[#dad8cc] p-4 flex flex-col justify-center gap-2">
              <div className="flex justify-between px-1">
-                <span className="text-[10px] font-black text-gray-400 uppercase">Progreso</span>
-                <span className="text-sm font-black text-blue-600">{form.porcentaje}%</span>
+                <span className="text-[9px] font-bold text-[#bfb3a3] uppercase">Avance Físico</span>
+                <span className="text-sm font-bold text-[#18202b]">{form.porcentaje}%</span>
              </div>
-             <input type="range" className="w-full accent-blue-600 h-1.5" min="0" max="100" value={form.porcentaje} onChange={e => setForm({...form, porcentaje: e.target.value})} />
+             <input type="range" className="w-full h-1 bg-[#dad8cc] accent-[#18202b]" min="0" max="100" value={form.porcentaje} onChange={e => setForm({...form, porcentaje: e.target.value})} />
            </div>
         </div>
 
-        {/* PREVIEW DE ARCHIVOS */}
+        {/* PREVIEW */}
         {archivosSeleccionados.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-3 p-4 bg-blue-50/30 rounded-[2rem] border border-blue-50">
+          <div className="mt-4 flex flex-wrap gap-2 p-4 bg-[#f9f8f6] border border-[#dad8cc]">
             {archivosSeleccionados.map((arch) => (
-              <div key={arch.id} className="relative group w-20 h-20 bg-white rounded-2xl overflow-hidden shadow-sm border border-blue-100">
+              <div key={arch.id} className="relative group w-16 h-16 bg-white border border-[#dad8cc]">
                 {arch.preview ? <img src={arch.preview} className="w-full h-full object-cover" alt="prev" /> : <div className="w-full h-full flex items-center justify-center text-xl">📄</div>}
-                <button onClick={() => setArchivosSeleccionados(prev => prev.filter(a => a.id !== arch.id))} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center">✕</button>
+                <button onClick={() => setArchivosSeleccionados(prev => prev.filter(a => a.id !== arch.id))} className="absolute -top-2 -right-2 bg-[#18202b] text-white w-4 h-4 text-[9px] flex items-center justify-center rounded-none">✕</button>
               </div>
             ))}
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-50">
-          <div className="flex gap-3">
+        <div className="flex items-center justify-between mt-6 pt-6 border-t border-[#f4f0eb]">
+          <div className="flex gap-2">
             <input type="file" ref={imageInputRef} className="hidden" accept="image/*" multiple onChange={manejarArchivos} />
-            <button onClick={() => imageInputRef.current.click()} className="w-12 h-12 flex items-center justify-center bg-blue-50 text-blue-600 rounded-2xl">📷</button>
+            <button onClick={() => imageInputRef.current.click()} className="px-4 py-2 border border-[#dad8cc] text-[#646e75] hover:border-[#18202b] hover:text-[#18202b] transition-all text-xs">FOTO</button>
             <input type="file" ref={docInputRef} className="hidden" accept=".pdf,.doc,.docx" multiple onChange={manejarArchivos} />
-            <button onClick={() => docInputRef.current.click()} className="w-12 h-12 flex items-center justify-center bg-gray-100 text-gray-500 rounded-2xl">📎</button>
+            <button onClick={() => docInputRef.current.click()} className="px-4 py-2 border border-[#dad8cc] text-[#646e75] hover:border-[#18202b] hover:text-[#18202b] transition-all text-xs">DOC</button>
           </div>
-          <button onClick={publicar} className="px-10 py-3 bg-gray-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg" disabled={enviando}>
-            {enviando ? "Cargando..." : "Publicar"}
+          <button onClick={publicar} className="px-8 py-3 bg-[#18202b] text-white font-bold text-[10px] uppercase tracking-widest hover:bg-[#474b54] transition-all rounded-none" disabled={enviando}>
+            {enviando ? "..." : "Publicar"}
           </button>
         </div>
       </div>
 
-      {/* FEED DE POSTS */}
+      {/* FEED */}
       <div className="space-y-16">
         {Object.keys(postsAgrupados).map((fecha) => (
-          <div key={fecha} className="space-y-8">
-            <h3 className="text-[10px] font-black text-gray-300 uppercase tracking-[0.4em] text-center">{fecha}</h3>
+          <div key={fecha} className="space-y-8 relative">
+            <div className="sticky top-0 bg-[#f4f0eb] z-10 py-2 text-center border-b border-[#18202b]">
+                <h3 className="text-[10px] font-bold text-[#18202b] uppercase tracking-[0.4em]">{fecha}</h3>
+            </div>
+            
             {postsAgrupados[fecha].map((post) => (
-              <div key={post.idavances} className="bg-white p-7 rounded-[2.8rem] border border-gray-100 shadow-sm transition-all group">
+              <div key={post.idavances} className="bg-white p-8 border border-[#d4cbba] transition-all hover:shadow-sm">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[9px] font-black uppercase tracking-widest">{post.tipo}</span>
-                  <span className="text-sm font-black text-blue-600">{post.porcentaje}%</span>
+                  <span className="px-3 py-1 border border-[#18202b] text-[#18202b] text-[9px] font-bold uppercase tracking-widest">{post.tipo}</span>
+                  <span className="text-sm font-light text-[#18202b]">{post.porcentaje}% Completado</span>
                 </div>
 
-                {/* AHORA FUNCIONA EL CLIC SIEMPRE */}
-                <p className="text-gray-700 text-lg font-medium mb-6 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => abrirModal(post)}>
+                <p className="text-[#474b54] text-base font-light mb-6 leading-relaxed cursor-pointer hover:text-[#18202b]" onClick={() => abrirModal(post)}>
                   {post.descripcion}
                 </p>
 
                 {post.adjuntos_urls ? (
                   <div className="space-y-4">
                     {esImagen(post.adjuntos_urls.split(',')[0]) ? (
-                      <div className="rounded-[2rem] overflow-hidden border border-gray-100 bg-gray-50 cursor-zoom-in group/img" onClick={() => abrirModal(post)}>
-                        <img 
-                          src={post.adjuntos_urls.split(',')[0]} 
-                          className="w-full h-auto object-cover max-h-[400px] group-hover/img:scale-105 transition-transform duration-500" 
-                          alt="Avance" 
-                        />
+                      <div className="overflow-hidden border border-[#dad8cc] bg-[#f9f8f6] cursor-zoom-in" onClick={() => abrirModal(post)}>
+                        <img src={post.adjuntos_urls.split(',')[0]} className="w-full h-auto object-cover max-h-[500px] grayscale hover:grayscale-0 transition-all duration-700" alt="Avance" />
                       </div>
                     ) : (
-                      <div className="flex items-center gap-4 p-6 bg-blue-50/50 rounded-2xl border border-blue-100 border-dashed cursor-pointer" onClick={() => abrirModal(post)}>
-                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-blue-50">📄</div>
-                        <div className="flex-1">
-                          <p className="text-xs font-black text-blue-900 uppercase tracking-tighter">Documento Adjunto</p>
-                          <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-1">Haga clic para ver detalles</p>
+                      <div className="flex items-center gap-4 p-6 bg-[#f9f8f6] border border-[#dad8cc] cursor-pointer hover:bg-[#dad8cc]/30" onClick={() => abrirModal(post)}>
+                        <div className="text-2xl">📄</div>
+                        <div>
+                          <p className="text-xs font-bold text-[#18202b] uppercase">Archivo Técnico</p>
+                          <p className="text-[9px] text-[#7d8b8d] uppercase tracking-widest mt-1">Ver documento</p>
                         </div>
                       </div>
                     )}
                     
                     <button 
                       onClick={(e) => { e.stopPropagation(); manejarDescarga(post.adjuntos_urls); }}
-                      className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-blue-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all"
+                      className="w-full flex items-center justify-center gap-2 border border-[#18202b] text-[#18202b] hover:bg-[#18202b] hover:text-white py-3 font-bold text-[9px] uppercase tracking-[0.2em] transition-all rounded-none"
                     >
-                      Descargar Archivo Original ⬇️
+                      Descargar Fuente
                     </button>
                   </div>
                 ) : (
-                  <div className="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-center cursor-pointer" onClick={() => abrirModal(post)}>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sin adjuntos - Ver detalle</p>
+                  <div className="p-4 bg-[#f9f8f6] border border-dashed border-[#dad8cc] text-center cursor-pointer" onClick={() => abrirModal(post)}>
+                    <p className="text-[9px] text-[#bfb3a3] uppercase tracking-widest">Ver detalle en bitácora</p>
                   </div>
                 )}
 
-                {/* Footer Costos */}
                 {Number(post.monto_gastado) > 0 && (
-                  <div className="mt-7 flex items-center justify-between p-5 bg-gray-50/70 rounded-[2rem] border border-gray-100">
-                    <span className="text-[9px] font-black text-gray-400 uppercase">{post.rubroNombre}</span>
-                    <span className="text-2xl font-black text-blue-600 tracking-tighter">${Number(post.monto_gastado).toLocaleString()}</span>
+                  <div className="mt-6 pt-4 border-t border-[#f4f0eb] flex justify-between items-center">
+                    <span className="text-[9px] font-bold text-[#bfb3a3] uppercase">{post.rubroNombre}</span>
+                    <span className="text-lg font-light text-[#18202b]">${Number(post.monto_gastado).toLocaleString()}</span>
                   </div>
                 )}
               </div>
@@ -233,4 +223,3 @@ export default function SeccionAvances({ idProyecto }) {
     </div>
   );
 }
-

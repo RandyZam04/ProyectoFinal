@@ -6,7 +6,6 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({ proyectos: 0, presupuestoTotal: 0, clientes: 0 });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // SEGURIDAD: Bloqueo de navegación y limpieza
   useEffect(() => {
     window.history.pushState(null, null, window.location.pathname);
     const manejarRetroceso = () => {
@@ -61,65 +60,65 @@ export default function AdminDashboard() {
   };
 
   const menuItems = [
-    { title: "Proyectos", desc: "Gestionar obras y presupuestos", path: "/admin/proyectos", icon: "🏗️", color: "bg-blue-600" },
-    { title: "Clientes", desc: "Base de datos de usuarios", path: "/admin/usuarios", icon: "👥", color: "bg-gray-900" },
-    { title: "Reportes", desc: "Análisis de gastos global", path: "/admin/reportes", icon: "📊", color: "bg-indigo-600" },
+    { title: "Proyectos", desc: "Gestión de Obras", path: "/admin/proyectos", icon: "🏗️" },
+    { title: "Clientes", desc: "Base de Datos", path: "/admin/usuarios", icon: "👥" },
+    { title: "Reportes", desc: "Análisis Financiero", path: "/admin/reportes", icon: "📊" },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-12">
+    <div className="min-h-screen bg-[#f4f0eb] p-8 lg:p-12">
+      <div className="max-w-7xl mx-auto border-l border-[#d4cbba] pl-8">
+        <div className="flex justify-between items-start mb-16">
           <div>
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Panel de Control</span>
-            <h1 className="text-5xl font-black text-gray-900 tracking-tighter mt-1">Administración</h1>
+            <h1 className="text-4xl font-light text-[#18202b] uppercase tracking-wide">Panel Administrativo</h1>
+            <div className="w-12 h-1 bg-[#18202b] mt-4 mb-2"></div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/admin/proyectos/crear")} className="bg-blue-600 hover:bg-gray-900 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg transition-all flex items-center gap-2">
-              <span className="text-lg">+</span> Proyecto
+          <div className="flex items-center gap-4">
+            <button onClick={() => navigate("/admin/proyectos/crear")} className="bg-[#18202b] hover:bg-[#474b54] text-white px-6 py-3 rounded-none font-bold text-[10px] uppercase tracking-widest transition-all">
+              + Nuevo Proyecto
             </button>
-            <button onClick={() => setShowLogoutModal(true)} className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white p-4 rounded-2xl transition-all shadow-sm border border-red-100">
-              <span className="font-black text-xs uppercase tracking-widest">Salir 🚪</span>
+            <button onClick={() => setShowLogoutModal(true)} className="border border-[#18202b] text-[#18202b] hover:bg-[#18202b] hover:text-white px-6 py-3 rounded-none font-bold text-[10px] uppercase tracking-widest transition-all">
+              Salir
             </button>
           </div>
         </div>
 
-        {/* Stats y Menú... (Igual que tu código anterior) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Proyectos Activos</p>
-            <p className="text-5xl font-black text-gray-900 tracking-tighter">{stats.proyectos}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[#d4cbba] bg-white mb-16">
+          <div className="p-10 border-b md:border-b-0 md:border-r border-[#d4cbba]">
+            <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.2em] mb-4">Proyectos Activos</p>
+            <p className="text-6xl font-thin text-[#18202b]">{stats.proyectos}</p>
           </div>
-          <div className="bg-blue-700 p-8 rounded-[2.5rem] shadow-xl text-white">
-            <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-2">Cartera de Clientes</p>
-            <p className="text-5xl font-black tracking-tighter">{stats.clientes}</p>
+          <div className="p-10 border-b md:border-b-0 md:border-r border-[#d4cbba]">
+            <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.2em] mb-4">Cartera Clientes</p>
+            <p className="text-6xl font-thin text-[#18202b]">{stats.clientes}</p>
           </div>
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Inversión Total</p>
-            <p className="text-4xl font-black text-gray-900 tracking-tighter">${stats.presupuestoTotal.toLocaleString()}</p>
+          <div className="p-10 bg-[#18202b] text-white">
+            <p className="text-[9px] font-bold text-[#dad8cc] uppercase tracking-[0.2em] mb-4">Capital Total</p>
+            <p className="text-3xl font-light mt-4">${stats.presupuestoTotal.toLocaleString()}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {menuItems.map((item) => (
-            <button key={item.title} onClick={() => navigate(item.path)} className="group bg-white p-8 rounded-[2rem] shadow-lg border border-gray-100 hover:border-blue-500 transition-all text-left">
-              <div className={`${item.color} w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform`}>{item.icon}</div>
-              <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">{item.title}</h3>
-              <p className="text-gray-400 text-sm mt-1">{item.desc}</p>
+            <button key={item.title} onClick={() => navigate(item.path)} className="group bg-white p-8 h-64 border border-[#d4cbba] hover:border-[#18202b] hover:shadow-lg transition-all text-left flex flex-col justify-between">
+              <div className="text-3xl opacity-40 group-hover:opacity-100 transition-opacity">{item.icon}</div>
+              <div>
+                <h3 className="text-xl font-light text-[#18202b] uppercase tracking-widest mb-1">{item.title}</h3>
+                <p className="text-[#646e75] text-[10px] font-bold uppercase tracking-widest">{item.desc}</p>
+              </div>
             </button>
           ))}
         </div>
 
         {showLogoutModal && (
-          <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-[3rem] p-10 max-w-sm w-full shadow-2xl border border-gray-100 text-center">
-              <div className="text-5xl mb-4">🔐</div>
-              <h2 className="text-2xl font-black text-gray-900 mb-2 italic">Cierre de Sesión</h2>
-              <p className="text-gray-500 mb-8 text-sm">¿Deseas abandonar el panel administrativo de forma segura?</p>
+          <div className="fixed inset-0 bg-[#18202b]/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#f4f0eb] border border-[#d4cbba] p-10 max-w-sm w-full shadow-2xl text-center">
+              <h2 className="text-xl font-light text-[#18202b] mb-6 uppercase tracking-widest">Cerrar Sesión</h2>
+              <p className="text-[#646e75] mb-8 text-xs">¿Confirmar salida del sistema?</p>
               <div className="flex flex-col gap-3">
-                <button onClick={confirmarCerrarSesion} className="bg-red-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all">Sí, cerrar sesión segura</button>
-                <button onClick={() => setShowLogoutModal(false)} className="bg-gray-100 text-gray-900 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-all">Cancelar</button>
+                <button onClick={confirmarCerrarSesion} className="bg-[#18202b] text-white py-4 rounded-none font-bold text-[10px] uppercase tracking-widest hover:bg-[#474b54]">Confirmar</button>
+                <button onClick={() => setShowLogoutModal(false)} className="bg-transparent border border-[#18202b] text-[#18202b] py-4 rounded-none font-bold text-[10px] uppercase tracking-widest hover:bg-white">Cancelar</button>
               </div>
             </div>
           </div>

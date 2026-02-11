@@ -35,80 +35,62 @@ export default function ListaProyectosAdmin() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FBFBFD] p-6 md:p-12 font-sans">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#f4f0eb] p-6 md:p-12">
+      <div className="max-w-6xl mx-auto">
         
-        {/* ENCABEZADO */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 border-b border-[#d4cbba] pb-6">
           <div>
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mb-2 block">Management Center</span>
-            <h2 className="text-5xl font-black text-gray-900 tracking-tighter italic">Proyectos</h2>
+            <span className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.3em] mb-2 block">Base de Datos</span>
+            <h2 className="text-4xl font-light text-[#18202b] uppercase tracking-wide">Proyectos</h2>
           </div>
           
-          <div className="w-full md:w-72 relative">
+          <div className="w-full md:w-80">
             <input 
               type="text"
-              placeholder="Buscar obra o cliente..."
+              placeholder="BUSCAR REFERENCIA..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full bg-white border border-gray-100 px-6 py-4 rounded-2xl text-xs font-bold shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+              className="w-full bg-transparent border-b border-[#18202b] py-2 text-xs font-bold text-[#18202b] placeholder-[#d4cbba] focus:outline-none uppercase tracking-widest"
             />
           </div>
         </div>
 
-        {/* LISTADO */}
         {proyectosFiltrados.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-[3rem] border border-dashed border-gray-200 shadow-sm px-10">
-            <div className="text-5xl mb-4">📂</div>
-            <p className="text-gray-400 font-black text-[10px] uppercase tracking-widest leading-loose">
-              No se encontraron registros activos<br/>en la base de datos central.
+          <div className="text-center py-20 border border-dashed border-[#d4cbba] bg-[#f9f8f6]">
+            <p className="text-[#bfb3a3] font-bold text-[10px] uppercase tracking-widest">
+              Sin registros disponibles.
             </p>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="space-y-4">
             {proyectosFiltrados.map((p) => (
               <Link 
                 to={`/admin/proyectos/${p.idproyectos}`} 
                 key={p.idproyectos} 
-                className="group relative"
+                className="group block"
               >
-                <div className="bg-white p-8 rounded-[2.8rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-blue-500/30 transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+                <div className="bg-white border border-[#d4cbba] p-8 hover:border-[#18202b] transition-all flex flex-col md:flex-row md:items-center justify-between gap-6">
                   
-                  {/* Decoración lateral de color */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-2 ${p.estado === 1 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
-
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest uppercase ${
-                        p.estado === 1 ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-500'
-                      }`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`px-2 py-1 text-[9px] font-bold tracking-widest uppercase border ${p.estado === 1 ? 'border-[#18202b] text-[#18202b]' : 'border-[#d4cbba] text-[#d4cbba]'}`}>
                         {p.estado === 1 ? "En Ejecución" : "Finalizado"}
                       </span>
-                      <span className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">ID: #{p.idproyectos}</span>
+                      <span className="text-[9px] text-[#bfb3a3] font-bold uppercase tracking-widest">ID: {p.idproyectos}</span>
                     </div>
 
-                    <h3 className="text-3xl font-black text-gray-900 tracking-tighter mb-2 group-hover:text-blue-600 transition-colors uppercase italic">
+                    <h3 className="text-2xl font-light text-[#18202b] mb-1 uppercase tracking-wide group-hover:pl-2 transition-all duration-500">
                       {p.nombre}
                     </h3>
                     
-                    <p className="text-gray-400 text-sm font-medium line-clamp-1 max-w-xl italic">
-                      {p.descripcion || "Sin descripción detallada disponible."}
+                    <p className="text-[#646e75] text-xs font-medium max-w-xl truncate">
+                      {p.descripcion || "Especificaciones no detalladas."}
                     </p>
                   </div>
 
-                  <div className="flex flex-col md:items-end justify-center gap-4 min-w-[200px] border-t md:border-t-0 md:border-l border-gray-50 pt-6 md:pt-0 md:pl-8">
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Inversionista</p>
-                        <p className="text-sm font-black text-gray-900 uppercase tracking-tighter">{p.cliente || "Externo"}</p>
-                      </div>
-                      <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white text-xs font-black uppercase">
-                        {(p.cliente || "C").charAt(0)}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                      Gestionar Archivos <span>→</span>
-                    </div>
+                  <div className="text-right border-l border-[#d4cbba] pl-8 hidden md:block">
+                    <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest mb-1">Cliente</p>
+                    <p className="text-sm font-bold text-[#18202b] uppercase">{p.cliente || "Externo"}</p>
                   </div>
                 </div>
               </Link>
@@ -116,13 +98,12 @@ export default function ListaProyectosAdmin() {
           </div>
         )}
 
-        {/* BOTÓN VOLVER */}
         <div className="flex justify-center mt-16">
           <button
             onClick={() => navigate("/admin")}
-            className="flex items-center gap-4 bg-white border border-gray-100 px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-gray-900 hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95"
+            className="text-[10px] font-bold text-[#18202b] uppercase tracking-[0.3em] hover:underline decoration-[#d4cbba]"
           >
-            <span className="text-lg">←</span> Volver al Sistema
+            ← Volver al Panel
           </button>
         </div>
       </div>

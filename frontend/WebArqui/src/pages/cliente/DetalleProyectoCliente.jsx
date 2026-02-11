@@ -23,112 +23,87 @@ export default function DetalleProyectoCliente() {
   }, [id]);
 
   const formatearFecha = (fechaStr) => {
-    if (!fechaStr) return "Sin fecha";
+    if (!fechaStr) return "S/F";
     const fecha = new Date(fechaStr);
     return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#f4f0eb] p-8 font-sans">
+      <div className="max-w-7xl mx-auto">
         
-        {/* HEADER */}
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex items-center gap-4">
+        <div className="mb-12 border-b border-[#d4cbba] pb-8 flex justify-between items-end">
+          <div className="flex flex-col gap-4">
             <button 
               onClick={() => tabActual === "modulos" ? navigate("/cliente/proyectos") : setTabActual("modulos")} 
-              className="group flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-sm border border-gray-100 hover:border-blue-500 transition-all"
+              className="text-[10px] font-bold text-[#bfb3a3] uppercase tracking-[0.3em] hover:text-[#18202b] self-start"
             >
-              {/* Icono dinámico con una pequeña animación */}
-              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gray-50 group-hover:bg-blue-50 transition-colors">
-                {tabActual === "modulos" ? (
-                  <span className="text-gray-600 group-hover:text-blue-600 text-lg">←</span>
-                ) : (
-                  <span className="text-gray-600 group-hover:text-blue-600 text-base">🏠</span>
-                )}
-              </div>
-
-              {/* Texto explicativo dinámico */}
-              <div className="flex flex-col items-start">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
-                  Regresar a
-                </span>
-                <span className="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-none">
-                  {tabActual === "modulos" ? "Mis Proyectos" : "Menú Principal"}
-                </span>
-              </div>
+               ← {tabActual === "modulos" ? "Mis Proyectos" : "Menú Principal"}
             </button>
             {proyecto.map((p) => (
               <div key={p.idproyectos}>
-                <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">{p.nombre}</h1>
-                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">
-                  {tabActual === "modulos" ? "Panel de Control" : "Bitácora de Avances"}
-                </p>
+                <h1 className="text-4xl md:text-5xl font-light text-[#18202b] uppercase tracking-wide">{p.nombre}</h1>
               </div>
             ))}
           </div>
+          <div className="hidden md:block text-right">
+             <p className="text-[9px] font-bold text-[#18202b] uppercase tracking-[0.3em]">Studio Z</p>
+             <p className="text-[9px] text-[#7d8b8d] uppercase tracking-widest">Portal de Cliente</p>
+          </div>
         </div>
 
-        {/* CONTENIDO DINÁMICO */}
         {tabActual === "modulos" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Módulos Disponibles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 space-y-8">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <button 
                   onClick={() => setTabActual("avances")} 
-                  className="group bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50 hover:border-blue-500 transition-all text-left relative overflow-hidden"
+                  className="group bg-white p-10 border border-[#d4cbba] hover:border-[#18202b] transition-all text-left h-64 flex flex-col justify-between shadow-sm hover:shadow-lg"
                 >
-                  <div className="bg-blue-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform">📸</div>
-                  <h3 className="text-2xl font-black text-gray-900 leading-none mb-2">Bitácora de Avances</h3>
-                  <p className="text-gray-400 text-sm font-medium">Fotos y reportes diarios.</p>
+                  <div className="text-4xl text-[#18202b] font-light">01</div>
+                  <div>
+                    <h3 className="text-2xl font-light text-[#18202b] uppercase mb-2 tracking-wide">Bitácora</h3>
+                    <p className="text-[#646e75] text-xs font-medium uppercase tracking-widest">Reportes y Fotografías</p>
+                  </div>
                 </button>
                 <button 
                   onClick={() => navigate(`/cliente/proyecto/${id}/presupuesto`)} 
-                  className="group bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-50 hover:border-emerald-500 transition-all text-left relative overflow-hidden"
+                  className="group bg-[#18202b] p-10 border border-[#18202b] hover:bg-[#474b54] transition-all text-left h-64 flex flex-col justify-between shadow-sm hover:shadow-lg"
                 >
-                  <div className="bg-emerald-600 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform">💰</div>
-                  <h3 className="text-2xl font-black text-gray-900 leading-none mb-2">Presupuesto y Costos</h3>
-                  <p className="text-gray-400 text-sm font-medium">Control de inversión y pagos realizados.</p>
+                  <div className="text-4xl text-[#dad8cc] font-light">02</div>
+                  <div>
+                    <h3 className="text-2xl font-light text-white uppercase mb-2 tracking-wide">Finanzas</h3>
+                    <p className="text-[#dad8cc] text-xs font-medium uppercase tracking-widest">Estado de Cuenta</p>
+                  </div>
                 </button>
               </div>
             </div>
 
-            {/* BARRA LATERAL INFO */}
-            <div className="space-y-6">
-              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Información de Obra</h3>
+            <div className="bg-white border border-[#d4cbba] p-10 h-fit">
+              <h3 className="text-[10px] font-bold text-[#18202b] uppercase tracking-[0.3em] mb-8 border-b border-[#dad8cc] pb-2">Ficha Técnica</h3>
               {proyecto.map((p) => (
-                <div key={`side-${p.idproyectos}`} className="bg-gray-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                  <div className="relative z-10 space-y-6">
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase mb-2">Cronograma</p>
-                      <div className="grid grid-cols-2 gap-4">
-                         <div>
-                            <p className="text-[9px] text-blue-400 uppercase font-bold">Inicio</p>
-                            <p className="text-sm font-bold italic">{formatearFecha(p.fecha_inicio)}</p>
-                         </div>
-                         <div>
-                            <p className="text-[9px] text-red-400 uppercase font-bold">Fin</p>
-                            <p className="text-sm font-bold italic">{formatearFecha(p.fecha_fin)}</p>
-                         </div>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase mb-4">Estado</p>
-                      <div className="flex items-center gap-2">
-                        <span className={`w-3 h-3 rounded-full animate-pulse ${p.estado === 1 ? "bg-green-500" : "bg-yellow-500"}`}></span>
-                        <span className="font-black text-xs uppercase tracking-widest">{p.estado === 1 ? "En Ejecución" : "Revisión"}</span>
-                      </div>
+                <div key={`side-${p.idproyectos}`} className="space-y-8">
+                  <div>
+                    <p className="text-[9px] text-[#bfb3a3] uppercase font-bold tracking-widest mb-1">Periodo</p>
+                    <p className="text-sm font-medium text-[#18202b]">{formatearFecha(p.fecha_inicio)} — {formatearFecha(p.fecha_fin)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[9px] text-[#bfb3a3] uppercase font-bold tracking-widest mb-1">Estatus</p>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${p.estado === 1 ? "bg-[#18202b]" : "bg-[#d4cbba]"}`}></span>
+                      <span className="font-bold text-xs uppercase tracking-widest text-[#18202b]">{p.estado === 1 ? "En Obra" : "Finalizado"}</span>
                     </div>
                   </div>
-                  <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-600 rounded-full blur-[80px] opacity-20"></div>
+                  <div className="pt-4 border-t border-[#dad8cc]">
+                      <p className="text-xs text-[#646e75] italic leading-relaxed">"{p.descripcion}"</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         ) : (
-          /* VISTA TWITTER FULL WIDTH */
-          <div className="animate-in slide-in-from-bottom-4 duration-500">
+          <div className="animate-fadeIn">
              <AvanceCliente idProyecto={id} />
           </div>
         )}

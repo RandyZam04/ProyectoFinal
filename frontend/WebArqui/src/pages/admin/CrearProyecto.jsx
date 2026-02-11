@@ -7,7 +7,7 @@ export default function CrearProyecto() {
   const [form, setForm] = useState({
     nombre: "",
     descripcion: "",
-    id_cliente: "", // Aquí guardaremos el idusuarios seleccionado
+    id_cliente: "", 
     fecha_inicio: "",
     fecha_fin: "",
     estado: "1",
@@ -18,11 +18,9 @@ export default function CrearProyecto() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Cambiamos a tu endpoint de usuarios
     fetch("http://localhost:3000/api/usuarios")
       .then((res) => res.json())
       .then((data) => {
-        // Filtramos solo los que NO son admin (admin === 0)
         const soloClientes = data.filter(u => u.admin === 0);
         setUsuarios(soloClientes);
       })
@@ -43,7 +41,6 @@ export default function CrearProyecto() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          // Aseguramos que se envíe como número para la DB
           id_cliente: form.id_cliente === "" ? null : Number(form.id_cliente)
         })
       });
@@ -56,51 +53,49 @@ export default function CrearProyecto() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-10">
+    <div className="min-h-screen bg-[#f4f0eb] font-sans p-8 lg:p-12">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-12 border-b border-[#18202b] pb-6">
           <button 
             onClick={() => navigate("/admin/proyectos")}
-            className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-2 hover:underline"
+            className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.3em] mb-4 hover:text-[#18202b]"
           >
-            ← Volver a la lista
+            ← Cancelar
           </button>
-          <h1 className="text-5xl font-black text-gray-900 tracking-tighter">Nuevo Proyecto</h1>
-          <p className="text-gray-400 mt-2 text-lg italic">Asigna un cliente de tu base de datos.</p>
+          <h1 className="text-4xl font-light text-[#18202b] uppercase tracking-wide">Alta de Proyecto</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white p-12 border border-[#d4cbba] space-y-8">
           
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Nombre</label>
+            <label className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Nombre del Proyecto</label>
             <input
               required
               name="nombre"
-              className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-600 outline-none"
+              className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] p-4 text-sm text-[#18202b] focus:border-[#18202b] focus:bg-white outline-none rounded-none transition-all"
               onChange={handleChange}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Descripción</label>
+            <label className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Descripción Técnica</label>
             <textarea
               name="descripcion"
-              className="w-full bg-gray-50 border-none rounded-2xl p-4 h-24 focus:ring-2 focus:ring-blue-600 outline-none"
+              className="w-full bg-[#f9f8f6] border border-[#dad8cc] p-4 h-24 text-sm text-[#18202b] focus:border-[#18202b] focus:bg-white outline-none rounded-none resize-none"
               onChange={handleChange}
             />
           </div>
 
-          {/* Selector con los datos de tu tabla 'usuarios' */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Cliente (Usuarios Finales)</label>
+            <label className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Cliente Asignado</label>
             <select
               required
               name="id_cliente"
-              className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-600 outline-none appearance-none cursor-pointer"
+              className="w-full bg-[#f9f8f6] border border-[#dad8cc] p-4 text-sm text-[#18202b] focus:border-[#18202b] outline-none rounded-none appearance-none"
               onChange={handleChange}
               value={form.id_cliente}
             >
-              <option value="">Selecciona un cliente...</option>
+              <option value="">Selecciona un cliente de la base de datos...</option>
               {usuarios.map((u) => (
                 <option key={u.idusuarios} value={u.idusuarios}>
                   {u.nombre} — ({u.email})
@@ -109,23 +104,23 @@ export default function CrearProyecto() {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Inicio</label>
-              <input type="date" required name="fecha_inicio" className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-600" onChange={handleChange} />
+              <label className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Inicio de Obra</label>
+              <input type="date" required name="fecha_inicio" className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] p-4 text-sm outline-none focus:border-[#18202b]" onChange={handleChange} />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Fin</label>
-              <input type="date" required name="fecha_fin" className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-600" onChange={handleChange} />
+              <label className="text-[9px] font-bold text-[#7d8b8d] uppercase tracking-widest">Entrega Estimada</label>
+              <input type="date" required name="fecha_fin" className="w-full bg-[#f9f8f6] border-b border-[#dad8cc] p-4 text-sm outline-none focus:border-[#18202b]" onChange={handleChange} />
             </div>
           </div>
 
           <button 
             type="submit"
             disabled={loading}
-            className="w-full py-5 bg-gray-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:bg-blue-700 transition-all shadow-xl disabled:bg-gray-300"
+            className="w-full py-5 bg-[#18202b] text-white rounded-none font-bold text-xs uppercase tracking-[0.3em] hover:bg-[#474b54] transition-all border border-[#18202b]"
           >
-            {loading ? "Procesando..." : "Crear Proyecto"}
+            {loading ? "Procesando..." : "Registrar Obra"}
           </button>
         </form>
       </div>

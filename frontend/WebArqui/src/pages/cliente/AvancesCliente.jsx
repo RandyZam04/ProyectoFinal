@@ -27,7 +27,6 @@ export default function AvanceCliente({ idProyecto }) {
 
   const abrirModal = (avance) => {
     const esArchivoPdf = avance.adjuntos_urls?.toLowerCase().includes(".pdf");
-    
     const postParaModal = {
       ...avance,
       adjuntos: avance.adjuntos_urls ? [
@@ -58,129 +57,105 @@ export default function AvanceCliente({ idProyecto }) {
   const esPdf = (url) => url?.toLowerCase().includes(".pdf");
   const esImagen = (url) => url?.match(/\.(jpeg|jpg|gif|png|webp)$/i) && !esPdf(url);
 
-  if (cargando) return (
-    <div className="p-20 text-center">
-      <div className="animate-spin inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
-      <p className="text-xs font-black text-gray-400 uppercase tracking-widest text-center">Sincronizando archivos...</p>
-    </div>
-  );
+  if (cargando) return <div className="p-20 text-center text-xs font-bold text-[#bfb3a3] uppercase tracking-widest">Sincronizando...</div>;
 
   return (
-    <div className="grid grid-cols-12 gap-6 items-start">
+    <div className="grid grid-cols-12 gap-12 items-start">
       
-      {/* NAVEGACIÓN DE FILTROS */}
-      <div className="col-span-12 md:col-span-3 lg:col-span-2 sticky top-6 space-y-1">
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] px-4 mb-4">Filtros</p>
-        {["Todos", "Avance", "Plano", "Render"].map((tipo) => (
-          <button
-            key={tipo}
-            onClick={() => setFiltroTipo(tipo)}
-            className={`w-full text-left px-5 py-3 rounded-2xl font-bold text-sm transition-all ${
-              filtroTipo === tipo 
-                ? "bg-blue-600 text-white shadow-lg" 
-                : "text-gray-500 hover:bg-white"
-            }`}
-          >
-            {tipo === "Todos" ? "📂 Ver Todo" : `# ${tipo}`}
-          </button>
-        ))}
+      <div className="col-span-12 md:col-span-3 sticky top-6">
+        <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-[0.2em] mb-4 border-b border-[#d4cbba] pb-2">Filtros</p>
+        <div className="space-y-1">
+          {["Todos", "Avance", "Plano", "Render"].map((tipo) => (
+            <button
+              key={tipo}
+              onClick={() => setFiltroTipo(tipo)}
+              className={`w-full text-left px-4 py-3 font-bold text-xs uppercase tracking-widest transition-all ${
+                filtroTipo === tipo 
+                  ? "bg-[#18202b] text-white" 
+                  : "text-[#646e75] hover:bg-white"
+              }`}
+            >
+              {tipo === "Todos" ? "Ver Todo" : `# ${tipo}`}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* FEED PRINCIPAL */}
-      <div className="col-span-12 md:col-span-9 lg:col-span-7 space-y-6">
+      <div className="col-span-12 md:col-span-9 space-y-12">
         {avancesFiltrados.length > 0 ? (
           avancesFiltrados.map((a) => (
-            <div key={a.idavances} className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden transition-all hover:shadow-md">
-              <div className="p-6 md:p-8">
+            <div key={a.idavances} className="bg-white border border-[#d4cbba] hover:border-[#18202b] transition-all">
+              <div className="p-8 md:p-12">
                 
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold">🏗️</div>
+                <div className="flex items-start justify-between mb-8 border-b border-[#f4f0eb] pb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 bg-[#18202b] flex items-center justify-center text-white text-xs font-light">SZ</div>
                     <div>
-                      <h4 className="text-sm font-black text-gray-900 uppercase italic">Reporte Oficial</h4>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                      <h4 className="text-xs font-bold text-[#18202b] uppercase tracking-widest">Reporte Oficial</h4>
+                      <p className="text-[9px] text-[#bfb3a3] font-bold uppercase tracking-widest">
                         {new Date(a.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] font-black px-3 py-1 bg-gray-100 text-gray-500 rounded-full uppercase">
+                  <span className="text-[9px] font-bold px-2 py-1 border border-[#d4cbba] text-[#646e75] uppercase">
                     {a.tipo}
                   </span>
                 </div>
 
                 <p 
-                  className="text-gray-600 text-base mb-6 font-medium leading-relaxed cursor-pointer hover:text-blue-600 transition-colors"
+                  className="text-[#474b54] text-lg font-light mb-8 leading-relaxed cursor-pointer hover:text-[#18202b]"
                   onClick={() => abrirModal(a)}
                 >
                   {a.descripcion}
                 </p>
 
                 {a.adjuntos_urls ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {esImagen(a.adjuntos_urls) ? (
                       <div 
-                        className="rounded-[1.5rem] overflow-hidden border border-gray-100 bg-gray-50 cursor-zoom-in group"
+                        className="overflow-hidden border border-[#d4cbba] bg-[#f9f8f6] cursor-zoom-in grayscale hover:grayscale-0 transition-all duration-700"
                         onClick={() => abrirModal(a)}
                       >
                         <img 
                           src={a.adjuntos_urls} 
-                          className="w-full h-auto object-cover max-h-[400px] group-hover:scale-105 transition-transform duration-500" 
+                          className="w-full h-auto object-cover max-h-[600px]" 
                           alt="Avance de obra" 
                         />
                       </div>
                     ) : (
                       <div 
-                        className="flex items-center gap-4 p-6 bg-blue-50/50 rounded-2xl border border-blue-100 border-dashed cursor-pointer hover:bg-blue-50 transition-colors"
+                        className="flex items-center gap-4 p-6 bg-[#f9f8f6] border border-[#d4cbba] cursor-pointer hover:bg-[#dad8cc]/50"
                         onClick={() => abrirModal(a)}
                       >
-                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-blue-50">
-                          📄
-                        </div>
+                        <div className="text-2xl">📄</div>
                         <div className="flex-1">
-                          <p className="text-xs font-black text-blue-900 uppercase tracking-tighter">Documento Técnico Adjunto</p>
-                          <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-1">
-                              Click para expandir detalles y comentarios
-                          </p>
+                          <p className="text-xs font-bold text-[#18202b] uppercase tracking-widest">Documento Técnico</p>
                         </div>
                       </div>
                     )}
 
                     <button 
                       onClick={() => manejarDescarga(a.adjuntos_urls)}
-                      className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-blue-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 bg-[#18202b] text-white py-4 font-bold text-[9px] uppercase tracking-[0.2em] hover:bg-[#474b54] transition-all"
                     >
-                      <span>Descargar Original</span>
-                      <span className="text-base">⬇️</span>
+                      Descargar Original
                     </button>
                   </div>
                 ) : (
-                  <div className="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-center cursor-pointer" onClick={() => abrirModal(a)}>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">Ver bitácora de texto</p>
+                  <div className="p-6 bg-[#f9f8f6] border border-dashed border-[#d4cbba] text-center cursor-pointer" onClick={() => abrirModal(a)}>
+                    <p className="text-[9px] font-bold text-[#bfb3a3] uppercase tracking-widest">Ver bitácora de texto</p>
                   </div>
                 )}
               </div>
             </div>
           ))
         ) : (
-          <div className="bg-white rounded-[2rem] p-20 text-center border-2 border-dashed border-gray-100">
-            <p className="text-gray-400 font-medium italic uppercase text-[10px] tracking-widest">Sin registros en esta categoría</p>
+          <div className="p-20 text-center border border-dashed border-[#d4cbba]">
+            <p className="text-[#bfb3a3] font-bold uppercase text-[10px] tracking-widest">Sin registros</p>
           </div>
         )}
       </div>
 
-      {/* PANEL DERECHO INFORMATIVO */}
-      <div className="hidden lg:block lg:col-span-3 sticky top-6">
-        <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden">
-          <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">Interacción</p>
-          <h3 className="text-lg font-black italic uppercase mb-4 leading-tight">Canal de Observaciones</h3>
-          <p className="text-gray-400 text-xs leading-relaxed mb-6">
-            Ahora puedes dejar tus comentarios directamente en cada reporte de avance. Nuestro equipo técnico revisará tus inquietudes.
-          </p>
-          <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-600 rounded-full blur-[60px] opacity-30"></div>
-        </div>
-      </div>
-
-      {/* MODAL GLOBAL */}
       {modalOpen && selectedPost && (
         <ModalGaleria 
           post={selectedPost} 
@@ -188,7 +163,6 @@ export default function AvanceCliente({ idProyecto }) {
           onClose={() => setModalOpen(false)} 
         />
       )}
-
     </div>
   );
 }
